@@ -66,7 +66,7 @@ const UpdateBook = () => {
       if (newImage) formData.append("image", newImage);
 
       const response = await axios.put(
-        "http://localhost:3000/api/book/update-book",
+        "https://bookhive-backend-muz9.onrender.com/api/book/update-book",
         formData,
         {
           headers: {
@@ -95,7 +95,7 @@ const UpdateBook = () => {
     const fetch = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/book/get-a-book/${id}`
+          `https://bookhive-backend-muz9.onrender.com/api/book/get-a-book/${id}`
         );
         setData(response.data.data);
       } catch (err) {
