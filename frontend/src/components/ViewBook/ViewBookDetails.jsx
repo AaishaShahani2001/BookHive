@@ -21,7 +21,7 @@ const ViewBookDetails = () => {
     const fetch = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/book/get-a-book/${id}`
+          `https://bookhive-backend-muz9.onrender.com/api/book/get-a-book/${id}`
         );
         setData(response.data.data);
       } catch (err) {
@@ -46,7 +46,7 @@ const ViewBookDetails = () => {
       }
 
       const response = await axios.put(
-        'http://localhost:3000/api/favourite/add-book-to-favourite',
+        'https://bookhive-backend-muz9.onrender.com/api/favourite/add-book-to-favourite',
         {},
         { headers }
       );
@@ -67,7 +67,7 @@ const ViewBookDetails = () => {
       }
 
       const response = await axios.put(
-        'http://localhost:3000/api/cart/add-to-cart',
+        'https://bookhive-backend-muz9.onrender.com/api/cart/add-to-cart',
         {},
         { headers }
       );
@@ -83,7 +83,7 @@ const ViewBookDetails = () => {
   const deleteBook = async () => {
     try {
       const response = await axios.delete(
-        'http://localhost:3000/api/book/delete-book',
+        'https://bookhive-backend-muz9.onrender.com/api/book/delete-book',
         { headers }
       );
       enqueueSnackbar(response.data.message, { variant: "success" });
