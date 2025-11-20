@@ -73,34 +73,37 @@ const AllOrders = () => {
       return date >= first && date <= last;
     }
 
-    if (type === "This Month")
+    if (type === "This Month") {
       return (
         date.getMonth() === today.getMonth() &&
         date.getFullYear() === today.getFullYear()
       );
+    }
 
     return true;
   };
 
-  // Apply Filters (Search + Status + Date)
+  // Filters
   useEffect(() => {
     let temp = [...orders];
 
+    // SEARCH
     if (search.trim() !== "") {
       const s = search.toLowerCase();
       temp = temp.filter((o) => {
         const title = o.book?.title?.toLowerCase() || "";
         const uname = o.user?.username?.toLowerCase() || "";
         const email = o.user?.email?.toLowerCase() || "";
-
         return title.includes(s) || uname.includes(s) || email.includes(s);
       });
     }
 
+    // STATUS
     if (filterStatus !== "All") {
       temp = temp.filter((o) => o.status === filterStatus);
     }
 
+    // DATE FILTER
     if (dateFilter !== "All") {
       temp = temp.filter((o) => filterByDate(o.createdAt, dateFilter));
     }
@@ -108,7 +111,7 @@ const AllOrders = () => {
     setFiltered(temp);
   }, [search, filterStatus, dateFilter, orders]);
 
-  // Update status
+  // Update Status
   const updateStatus = async (index) => {
     try {
       const id = filtered[index]._id;
@@ -174,6 +177,7 @@ const AllOrders = () => {
 
   return (
     <div className="min-h-screen bg-[#3B2F2F] text-[#F2E8D5] p-6">
+
       {loading && (
         <div className="h-[50vh] flex items-center justify-center">
           <Loader />
@@ -182,14 +186,15 @@ const AllOrders = () => {
 
       {!loading && (
         <>
-          {/* HEADER */}
+          {/* Header */}
           <div className="flex flex-col md:flex-row items-center justify-between mb-10">
             <h1 className="text-5xl font-bold drop-shadow mb-4 md:mb-0">
               All Orders
             </h1>
 
             <div className="flex flex-col md:flex-row gap-4 items-center">
-              {/* SEARCH */}
+
+              {/* Search */}
               <div className="relative">
                 <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[#E85A4F]/70" />
                 <input
@@ -201,7 +206,7 @@ const AllOrders = () => {
                 />
               </div>
 
-              {/* STATUS FILTER */}
+              {/* Status Filter */}
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
@@ -214,7 +219,7 @@ const AllOrders = () => {
                 <option>Canceled</option>
               </select>
 
-              {/* DATE FILTER */}
+              {/* Date Filter */}
               <select
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value)}
@@ -240,10 +245,9 @@ const AllOrders = () => {
             <p className="text-xl text-[#D7C4A9]">No matching orders.</p>
           )}
 
-          {/* TABLE */}
           {filtered.length > 0 && (
             <>
-              {/* TABLE HEADER */}
+              {/* Table header */}
               <div className="bg-[#4A3B34]/50 border border-[#8B5E3C]/40 rounded-xl py-3 px-4 flex gap-4 font-semibold">
                 <div className="w-[5%]">#</div>
                 <div className="w-[18%]">Book</div>
@@ -251,12 +255,10 @@ const AllOrders = () => {
                 <div className="w-[12%]">Price</div>
                 <div className="w-[20%]">Date & Time</div>
                 <div className="w-[15%]">Status</div>
-                <div className="w-[10%] text-center">
-                  <FaUserAlt />
-                </div>
+                <div className="w-[10%] text-center"><FaUserAlt /></div>
               </div>
 
-              {/* ORDER ROWS */}
+              {/* Order rows */}
               {filtered.map((item, index) => (
                 <div
                   key={item._id}
@@ -264,12 +266,12 @@ const AllOrders = () => {
                 >
                   <div className="w-[5%] text-center">{index + 1}</div>
 
-                  {/* BOOK TITLE */}
+                  {/* Book Title */}
                   <div className="w-[18%]">
                     {item.book ? (
                       <Link
                         to={`/view-book-details/${item.book._id}`}
-                        className="hover:text-[#E85A4F]"
+                        className="hover:text[#E85A4F]"
                       >
                         {item.book.title}
                       </Link>
@@ -278,23 +280,23 @@ const AllOrders = () => {
                     )}
                   </div>
 
-                  {/* DESC */}
+                  {/* Description */}
                   <div className="hidden md:block w-[30%] opacity-70">
                     {item.book?.desc?.slice(0, 60)}...
                   </div>
 
-                  {/* PRICE */}
+                  {/* Price */}
                   <div className="w-[12%] font-bold text-[#E85A4F]">
                     Rs. {item.book?.price}
                   </div>
 
-                  {/* DATE */}
+                  {/* Date */}
                   <div className="w-[20%] text-sm text-[#D7C4A9]">
                     {new Date(item.createdAt).toLocaleString()}
                   </div>
 
-                  {/* STATUS */}
-                  <div className="w-[15%] font-semibold relative">
+                  {/* Status */}
+                  <div className="w-[15%] font-semibold">
                     <button
                       onClick={() => {
                         setActiveIndex(index);
@@ -305,48 +307,9 @@ const AllOrders = () => {
                         {item.status}
                       </span>
                     </button>
-
-                    {/* FIXED DROPDOWN */}
-                    {activeIndex === index && (
-                      <div
-                        className="
-                          absolute 
-                          bg-[#3B2F2F] 
-                          border border-[#8B5E3C]/50 
-                          rounded-lg 
-                          p-3 
-                          flex 
-                          items-center 
-                          gap-3 
-                          z-50
-                          right-0
-                          translate-y-full
-                          mt-2
-                        "
-                        style={{ minWidth: "220px" }}
-                      >
-                        <select
-                          className="bg-[#3B2F2F] border border-[#8B5E3C]/50 px-3 py-1 rounded-lg w-full"
-                          value={selectedStatus}
-                          onChange={(e) => setSelectedStatus(e.target.value)}
-                        >
-                          <option>Order Placed</option>
-                          <option>Out for Delivery</option>
-                          <option>Delivered</option>
-                          <option>Canceled</option>
-                        </select>
-
-                        <button
-                          className="text-green-400 hover:text-[#E85A4F] text-xl"
-                          onClick={() => updateStatus(index)}
-                        >
-                          <FaCheck />
-                        </button>
-                      </div>
-                    )}
                   </div>
 
-                  {/* USER INFO */}
+                  {/* User Info */}
                   <div className="w-[10%] flex justify-center text-xl">
                     <button
                       className="hover:text-[#E85A4F]"
@@ -358,6 +321,48 @@ const AllOrders = () => {
                       <IoOpenOutline />
                     </button>
                   </div>
+
+                  {/* PERFECTLY ALIGNED DROPDOWN */}
+                  {activeIndex === index && (
+                    <div
+                      className="
+                        absolute 
+                        bg-[#3B2F2F] 
+                        border border-[#8B5E3C]/50 
+                        rounded-lg 
+                        p-3 
+                        flex 
+                        items-center 
+                        gap-3 
+                        z-50
+                        animate-scale-fade
+                      "
+                      style={{
+                        top: "100%",
+                        right: "12%",
+                        minWidth: "230px",
+                      }}
+                    >
+                      <select
+                        className="bg-[#3B2F2F] border border-[#8B5E3C]/50 px-3 py-1 rounded-lg w-full"
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                      >
+                        <option>Order Placed</option>
+                        <option>Out for Delivery</option>
+                        <option>Delivered</option>
+                        <option>Canceled</option>
+                      </select>
+
+                      <button
+                        className="text-green-400 hover:text-[#E85A4F] text-xl"
+                        onClick={() => updateStatus(index)}
+                      >
+                        <FaCheck />
+                      </button>
+                    </div>
+                  )}
+
                 </div>
               ))}
             </>
