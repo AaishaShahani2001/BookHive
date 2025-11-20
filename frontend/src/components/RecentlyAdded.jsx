@@ -11,7 +11,7 @@ const RecentlyAdded = () => {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/book/get-recent-books");
+        const res = await axios.get("https://bookhive-backend-muz9.onrender.com/api/book/get-recent-books");
         setData(res.data?.data ?? []);
       } catch (e) {
         console.error("Failed to fetch recent books:", e);
