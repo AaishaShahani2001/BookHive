@@ -16,7 +16,7 @@ const Profile = () => {
     const fetch = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/user/get-user-info",
+          "https://bookhive-backend-muz9.onrender.com/api/user/get-user-info",
           { headers }
         );
         setProfile(response.data);
