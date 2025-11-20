@@ -23,7 +23,7 @@ const Settings = () => {
     const fetch = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/user/get-user-info",
+          "https://bookhive-backend-muz9.onrender.com/api/user/get-user-info",
           { headers }
         );
 
@@ -46,7 +46,7 @@ const Settings = () => {
       }
 
       const response = await axios.put(
-        "http://localhost:3000/api/user/update-address",
+        "https://bookhive-backend-muz9.onrender.com/api/user/update-address",
         Value,
         { headers }
       );
