@@ -25,7 +25,7 @@ const AllBooks = () => {
   useEffect(() => {
     const fetch = async () => {
       const response = await axios.get(
-        `http://localhost:3000/api/book/get-all-books`
+        `https://bookhive-backend-muz9.onrender.com/api/book/get-all-books`
       );
       setData(response.data.data);
       setFiltered(response.data.data);
