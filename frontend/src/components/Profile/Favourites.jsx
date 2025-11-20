@@ -14,7 +14,7 @@ const Favourites = () => {
     const fetchFavourites = async () => {
       try {
         const res = await axios.get(
-          'http://localhost:3000/api/favourite/get-favourite-books',
+          'https://bookhive-backend-muz9.onrender.com/api/favourite/get-favourite-books',
           { headers }
         );
         setFavouriteBooks(res?.data?.data ?? []);
