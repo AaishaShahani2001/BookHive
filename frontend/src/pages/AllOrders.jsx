@@ -12,6 +12,8 @@ import autoTable from "jspdf-autotable";
 import { useSnackbar } from "notistack";
 
 const AllOrders = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [orders, setOrders] = useState([]);
   const [filtered, setFiltered] = useState([]);
 
@@ -25,8 +27,6 @@ const AllOrders = () => {
   const [userDivData, setUserDivData] = useState(null);
 
   const [loading, setLoading] = useState(false);
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const headers = {
     authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -73,17 +73,16 @@ const AllOrders = () => {
       return date >= first && date <= last;
     }
 
-    if (type === "This Month") {
+    if (type === "This Month")
       return (
         date.getMonth() === today.getMonth() &&
         date.getFullYear() === today.getFullYear()
       );
-    }
 
     return true;
   };
 
-  // Filters
+  // Apply Filters (Search + Status + Date)
   useEffect(() => {
     let temp = [...orders];
 
@@ -93,6 +92,7 @@ const AllOrders = () => {
         const title = o.book?.title?.toLowerCase() || "";
         const uname = o.user?.username?.toLowerCase() || "";
         const email = o.user?.email?.toLowerCase() || "";
+
         return title.includes(s) || uname.includes(s) || email.includes(s);
       });
     }
@@ -108,7 +108,7 @@ const AllOrders = () => {
     setFiltered(temp);
   }, [search, filterStatus, dateFilter, orders]);
 
-  // Update Status
+  // Update status
   const updateStatus = async (index) => {
     try {
       const id = filtered[index]._id;
@@ -145,42 +145,35 @@ const AllOrders = () => {
 
   // PDF Download
   const downloadPDF = () => {
-    try {
-      const doc = new jsPDF();
+    const doc = new jsPDF();
 
-      doc.setFontSize(18);
-      doc.text("BookHive — All Orders Summary", 14, 20);
+    doc.setFontSize(18);
+    doc.text("BookHive — All Orders Summary", 14, 20);
 
-      const tableRows = filtered.map((o, i) => [
-        i + 1,
-        o.book?.title || "Deleted",
-        "Rs." + (o.book?.price || "N/A"),
-        o.status,
-        o.user?.username || "N/A",
-        o.user?.email || "N/A",
-        new Date(o.createdAt).toLocaleString(),
-      ]);
+    const tableRows = filtered.map((o, i) => [
+      i + 1,
+      o.book?.title || "Deleted",
+      "Rs." + (o.book?.price || "N/A"),
+      o.status,
+      o.user?.username || "N/A",
+      o.user?.email || "N/A",
+      new Date(o.createdAt).toLocaleString(),
+    ]);
 
-      autoTable(doc, {
-        startY: 30,
-        head: [["#", "Book", "Price", "Status", "User", "Email", "Date"]],
-        body: tableRows,
-        theme: "grid",
-        styles: { fontSize: 10 },
-        headStyles: { fillColor: [139, 94, 60] },
-      });
+    autoTable(doc, {
+      startY: 30,
+      head: [["#", "Book", "Price", "Status", "User", "Email", "Date"]],
+      body: tableRows,
+      theme: "grid",
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [139, 94, 60] },
+    });
 
-      doc.save("BookHive_All_Orders.pdf");
-
-      enqueueSnackbar("PDF Downloaded", { variant: "success" });
-    } catch (err) {
-      enqueueSnackbar("Failed to generate PDF", { variant: "error" });
-    }
+    doc.save("BookHive_All_Orders.pdf");
   };
 
   return (
     <div className="min-h-screen bg-[#3B2F2F] text-[#F2E8D5] p-6">
-
       {loading && (
         <div className="h-[50vh] flex items-center justify-center">
           <Loader />
@@ -189,14 +182,14 @@ const AllOrders = () => {
 
       {!loading && (
         <>
-          {/* Header */}
+          {/* HEADER */}
           <div className="flex flex-col md:flex-row items-center justify-between mb-10">
             <h1 className="text-5xl font-bold drop-shadow mb-4 md:mb-0">
               All Orders
             </h1>
 
             <div className="flex flex-col md:flex-row gap-4 items-center">
-              {/* Search */}
+              {/* SEARCH */}
               <div className="relative">
                 <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[#E85A4F]/70" />
                 <input
@@ -208,7 +201,7 @@ const AllOrders = () => {
                 />
               </div>
 
-              {/* Status */}
+              {/* STATUS FILTER */}
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
@@ -221,7 +214,7 @@ const AllOrders = () => {
                 <option>Canceled</option>
               </select>
 
-              {/* Date Filter */}
+              {/* DATE FILTER */}
               <select
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value)}
@@ -247,9 +240,10 @@ const AllOrders = () => {
             <p className="text-xl text-[#D7C4A9]">No matching orders.</p>
           )}
 
+          {/* TABLE */}
           {filtered.length > 0 && (
             <>
-              {/* Table header */}
+              {/* TABLE HEADER */}
               <div className="bg-[#4A3B34]/50 border border-[#8B5E3C]/40 rounded-xl py-3 px-4 flex gap-4 font-semibold">
                 <div className="w-[5%]">#</div>
                 <div className="w-[18%]">Book</div>
@@ -257,9 +251,12 @@ const AllOrders = () => {
                 <div className="w-[12%]">Price</div>
                 <div className="w-[20%]">Date & Time</div>
                 <div className="w-[15%]">Status</div>
-                <div className="w-[10%] text-center"><FaUserAlt /></div>
+                <div className="w-[10%] text-center">
+                  <FaUserAlt />
+                </div>
               </div>
 
+              {/* ORDER ROWS */}
               {filtered.map((item, index) => (
                 <div
                   key={item._id}
@@ -267,6 +264,7 @@ const AllOrders = () => {
                 >
                   <div className="w-[5%] text-center">{index + 1}</div>
 
+                  {/* BOOK TITLE */}
                   <div className="w-[18%]">
                     {item.book ? (
                       <Link
@@ -280,19 +278,23 @@ const AllOrders = () => {
                     )}
                   </div>
 
+                  {/* DESC */}
                   <div className="hidden md:block w-[30%] opacity-70">
                     {item.book?.desc?.slice(0, 60)}...
                   </div>
 
+                  {/* PRICE */}
                   <div className="w-[12%] font-bold text-[#E85A4F]">
                     Rs. {item.book?.price}
                   </div>
 
+                  {/* DATE */}
                   <div className="w-[20%] text-sm text-[#D7C4A9]">
                     {new Date(item.createdAt).toLocaleString()}
                   </div>
 
-                  <div className="w-[15%] font-semibold">
+                  {/* STATUS */}
+                  <div className="w-[15%] font-semibold relative">
                     <button
                       onClick={() => {
                         setActiveIndex(index);
@@ -304,10 +306,27 @@ const AllOrders = () => {
                       </span>
                     </button>
 
+                    {/* FIXED DROPDOWN */}
                     {activeIndex === index && (
-                      <div className="absolute left-0 top-full mt-2 bg-[#3B2F2F] border border-[#8B5E3C]/50 rounded-lg p-3 flex items-center gap-3 z-50">
+                      <div
+                        className="
+                          absolute 
+                          bg-[#3B2F2F] 
+                          border border-[#8B5E3C]/50 
+                          rounded-lg 
+                          p-3 
+                          flex 
+                          items-center 
+                          gap-3 
+                          z-50
+                          right-0
+                          translate-y-full
+                          mt-2
+                        "
+                        style={{ minWidth: "220px" }}
+                      >
                         <select
-                          className="bg-[#3B2F2F] border border-[#8B5E3C]/50 px-3 py-1 rounded-lg"
+                          className="bg-[#3B2F2F] border border-[#8B5E3C]/50 px-3 py-1 rounded-lg w-full"
                           value={selectedStatus}
                           onChange={(e) => setSelectedStatus(e.target.value)}
                         >
@@ -318,7 +337,7 @@ const AllOrders = () => {
                         </select>
 
                         <button
-                          className="text-green-500 hover:text-[#E85A4F] text-xl"
+                          className="text-green-400 hover:text-[#E85A4F] text-xl"
                           onClick={() => updateStatus(index)}
                         >
                           <FaCheck />
@@ -327,6 +346,7 @@ const AllOrders = () => {
                     )}
                   </div>
 
+                  {/* USER INFO */}
                   <div className="w-[10%] flex justify-center text-xl">
                     <button
                       className="hover:text-[#E85A4F]"
