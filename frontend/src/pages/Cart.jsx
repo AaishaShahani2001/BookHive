@@ -22,7 +22,7 @@ const Cart = () => {
     const fetchCart = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:3000/api/cart/get-user-cart",
+          "https://bookhive-backend-muz9.onrender.com/api/cart/get-user-cart",
           { headers }
         );
         setCart(res.data.data);
@@ -38,7 +38,7 @@ const Cart = () => {
   const deleteItem = async (bookid) => {
     try {
       const res = await axios.put(
-        `http://localhost:3000/api/cart/remove-from-cart/${bookid}`,
+        `https://bookhive-backend-muz9.onrender.com/api/cart/remove-from-cart/${bookid}`,
         {},
         { headers }
       );
@@ -70,7 +70,7 @@ const Cart = () => {
       }
 
       const res = await axios.post(
-        "http://localhost:3000/api/order/place-order",
+        "https://bookhive-backend-muz9.onrender.com/api/order/place-order",
         { order: Cart },
         { headers }
       );
