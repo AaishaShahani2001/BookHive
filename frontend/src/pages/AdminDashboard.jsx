@@ -55,7 +55,7 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:3000/api/order/get-all-orders",
+        "https://bookhive-backend-muz9.onrender.com/api/order/get-all-orders",
         { headers }
       );
       setOrders(response.data.data || []);
