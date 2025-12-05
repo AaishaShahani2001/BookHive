@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { MdOutlineDelete } from 'react-icons/md';
 import { useSnackbar } from 'notistack';
+import DeleteConfirm from "../DeleteConfirm.jsx";
 
 const ViewBookDetails = () => {
   const { id } = useParams();
@@ -16,6 +17,9 @@ const ViewBookDetails = () => {
   const [Data, setData] = useState();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const role = useSelector((state) => state.auth.role);
+
+  // CONFIRM POPUP STATE
+  const [openDelete, setOpenDelete] = useState(false);
 
   useEffect(() => {
     const fetch = async () => {
@@ -79,7 +83,7 @@ const ViewBookDetails = () => {
     }
   };
 
-  // DELETE BOOK
+  // DELETE BOOK — triggered after confirmation
   const deleteBook = async () => {
     try {
       const response = await axios.delete(
@@ -93,13 +97,13 @@ const ViewBookDetails = () => {
     }
   };
 
-  //  3-STATE STOCK BADGE COLORS
+  // STOCK BADGE COLOR
   const stockBadge =
     Data?.stockStatus === "Available"
       ? "bg-green-600/20 text-green-400 border border-green-500/30"
       : Data?.stockStatus === "Low Stock"
       ? "bg-yellow-600/20 text-yellow-300 border border-yellow-500/30"
-      : "bg-red-600/20 text-red-400 border border-red-500/30"; // Unavailable
+      : "bg-red-600/20 text-red-400 border border-red-500/30";
 
   return (
     <>
@@ -158,7 +162,7 @@ const ViewBookDetails = () => {
                   <button 
                     className="bg-[#E85A4F] text-white p-3 rounded-full text-3xl
                       shadow-md hover:bg-red-700 flex items-center justify-center"
-                    onClick={deleteBook}
+                    onClick={() => setOpenDelete(true)}   // OPEN CONFIRM POPUP
                   >
                     <MdOutlineDelete />
                   </button>
@@ -218,6 +222,15 @@ const ViewBookDetails = () => {
           <Loader />
         </div>
       )}
+
+      {/* DELETE CONFIRM POPUP */}
+      <DeleteConfirm
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        onConfirm={deleteBook}
+        title="Delete this book?"
+        message="Are you sure you want to permanently delete this book?"
+      />
     </>
   );
 };

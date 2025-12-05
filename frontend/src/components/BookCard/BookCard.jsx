@@ -1,39 +1,7 @@
 import React from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
-import { useSnackbar } from "notistack";
 
 const BookCard = ({ data, favourite, onRemove }) => {
-  const { enqueueSnackbar } = useSnackbar();
-
-  const headers = {
-    id: localStorage.getItem("id"),
-    authorization: `Bearer ${localStorage.getItem("token")}`,
-    bookid: data._id,
-  };
-
-  const handleRemoveBook = async () => {
-    try {
-      const response = await axios.put(
-        "https://bookhive-backend-muz9.onrender.com/api/favourite/remove-book-from-favourite",
-        {},
-        { headers }
-      );
-
-      enqueueSnackbar(response.data.message, {
-        variant: "success",
-      });
-
-      // OPTIONAL: let parent update UI without refresh
-      if (onRemove) onRemove(data._id);
-
-    } catch (error) {
-      enqueueSnackbar(
-        error?.response?.data?.message || "Failed to remove book",
-        { variant: "error" }
-      );
-    }
-  };
 
   // STOCK BADGE LOGIC
   const stockBadgeClass =
@@ -41,7 +9,7 @@ const BookCard = ({ data, favourite, onRemove }) => {
       ? "bg-green-600/20 text-green-400 border border-green-500/30"
       : data.stockStatus === "Low Stock"
       ? "bg-yellow-600/20 text-yellow-300 border border-yellow-500/30"
-      : "bg-red-600/20 text-red-400 border border-red-500/30"; 
+      : "bg-red-600/20 text-red-400 border border-red-500/30";
 
   return (
     <div
@@ -58,6 +26,7 @@ const BookCard = ({ data, favourite, onRemove }) => {
         {data.stockStatus}
       </span>
 
+      {/* BOOK DETAILS LINK */}
       <Link to={`/view-book-details/${data._id}`}>
         <div>
           <div
@@ -93,7 +62,7 @@ const BookCard = ({ data, favourite, onRemove }) => {
             bg-[#8B5E3C] text-white
             hover:bg-[#E85A4F] transition-all duration-300
           "
-          onClick={handleRemoveBook}
+          onClick={() => onRemove(data._id)}  // 👉 NO axios, no snackbar
         >
           Remove from Favourites
         </button>
