@@ -4,6 +4,7 @@ import Loader from "../components/Loader/Loader";
 import { AiFillDelete } from "react-icons/ai";
 import axios from "axios";
 import { useSnackbar } from "notistack";
+import DeleteConfirm from "../components/DeleteConfirm";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -12,12 +13,16 @@ const Cart = () => {
   const [Cart, setCart] = useState();
   const [Total, setTotal] = useState(0);
 
+  // DELETE CONFIRM STATES
+  const [openDelete, setOpenDelete] = useState(false);
+  const [selectedBookId, setSelectedBookId] = useState(null);
+
   const headers = {
     id: localStorage.getItem("id"),
     authorization: `Bearer ${localStorage.getItem("token")}`,
   };
 
-  // GET CART DATA
+  // GET CART
   useEffect(() => {
     const fetchCart = async () => {
       try {
@@ -32,27 +37,37 @@ const Cart = () => {
     };
 
     fetchCart();
-  }, []); // FIXED infinite loop
+  }, []);
 
-  // DELETE CART ITEM
-  const deleteItem = async (bookid) => {
+  // OPEN POPUP instead of deleting immediately
+  const askDelete = (bookid) => {
+    setSelectedBookId(bookid);
+    setOpenDelete(true);
+  };
+
+  // DELETE AFTER CONFIRMATION
+  const confirmDelete = async () => {
     try {
       const res = await axios.put(
-        `https://bookhive-backend-muz9.onrender.com/api/cart/remove-from-cart/${bookid}`,
+        `https://bookhive-backend-muz9.onrender.com/api/cart/remove-from-cart/${selectedBookId}`,
         {},
         { headers }
       );
 
       enqueueSnackbar(res.data.message, { variant: "success" });
 
-      // refresh cart after delete
-      setCart((prev) => prev.filter((item) => item._id !== bookid));
+      // Remove from UI without page reload
+      setCart((prev) => prev.filter((item) => item._id !== selectedBookId));
+
+      setOpenDelete(false);
+      setSelectedBookId(null);
     } catch (err) {
       enqueueSnackbar("Failed to remove item", { variant: "error" });
+      setOpenDelete(false);
     }
   };
 
-  // CALCULATE TOTAL
+  // TOTAL PRICE
   useEffect(() => {
     if (Cart && Cart.length > 0) {
       let total = 0;
@@ -118,16 +133,11 @@ const Cart = () => {
               <div
                 key={i}
                 className="
-              bg-[#4A3B34]/40
-              border border-[#8B5E3C]/30
-              backdrop-blur-xl
-              rounded-2xl shadow-md
-              p-4 md:p-5
-              flex flex-col md:flex-row 
-              justify-between 
-              gap-4 
-              hover:bg-[#4A3B34]/60 transition-all
-            "
+                  bg-[#4A3B34]/40 border border-[#8B5E3C]/30 
+                  backdrop-blur-xl rounded-2xl shadow-md p-4 md:p-5
+                  flex flex-col md:flex-row justify-between gap-4 
+                  hover:bg-[#4A3B34]/60 transition-all
+                "
               >
                 {/* IMAGE */}
                 <img
@@ -154,18 +164,12 @@ const Cart = () => {
                     Rs. {items.price}
                   </h2>
 
-                  {/* Delete button */}
                   <button
                     className="
-                    bg-[#E85A4F]/20 
-                    text-[#E85A4F] 
-                    border border-[#E85A4F] 
-                    p-3 rounded-xl 
-                    text-xl 
-                    hover:bg-[#E85A4F]/40 
-                    transition-all
-                  "
-                    onClick={() => deleteItem(items._id)}
+                      bg-[#E85A4F]/20 text-[#E85A4F] border border-[#E85A4F]
+                      p-3 rounded-xl text-xl hover:bg-[#E85A4F]/40 transition-all
+                    "
+                    onClick={() => askDelete(items._id)} // 🔥 OPEN POPUP
                   >
                     <AiFillDelete />
                   </button>
@@ -181,14 +185,10 @@ const Cart = () => {
         <div className="mt-10 flex justify-end">
           <div
             className="
-          bg-[#4A3B34]/40 
-          border border-[#8B5E3C]/30 
-          backdrop-blur-xl 
-          rounded-2xl 
-          shadow-md 
-          p-6 
-          w-full md:w-1/3
-        "
+              bg-[#4A3B34]/40 border border-[#8B5E3C]/30 
+              backdrop-blur-xl rounded-2xl shadow-md 
+              p-6 w-full md:w-1/3
+            "
           >
             <h1 className="text-3xl font-bold text-[#F2E8D5]">
               Order Summary
@@ -201,11 +201,9 @@ const Cart = () => {
 
             <button
               className="
-            w-full mt-6 bg-[#8B5E3C] 
-            text-white font-semibold 
-            py-3 rounded-xl 
-            hover:bg-[#E85A4F] transition-all
-          "
+                w-full mt-6 bg-[#8B5E3C] text-white font-semibold 
+                py-3 rounded-xl hover:bg-[#E85A4F] transition-all
+              "
               onClick={PlaceOrder}
             >
               Place your Order
@@ -213,6 +211,15 @@ const Cart = () => {
           </div>
         </div>
       )}
+
+      {/* DELETE CONFIRM POPUP */}
+      <DeleteConfirm
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        onConfirm={confirmDelete}
+        title="Remove this item?"
+        message="Do you want to remove this book from your cart?"
+      />
     </div>
   );
 };
