@@ -164,7 +164,7 @@ const About = () => {
               Browse Books
             </a>
             <a
-              href="/dashboard"
+              href="/"
               className="inline-block border-2 border-[#D7C4A9] text-[#F2E8D5] font-semibold px-8 py-4 rounded-lg hover:bg-[#8B5E3C] hover:text-white transition-all"
             >
               Go to Dashboard
