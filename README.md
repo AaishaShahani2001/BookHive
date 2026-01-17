@@ -1,123 +1,125 @@
-📚 BookHive – MERN Online Bookstore
+# 📚 BookHive – MERN Online Bookstore
 
-BookHive is a full-stack MERN (MongoDB, Express, React, Node.js) application designed to offer a smooth and modern online bookstore experience. It enables users to explore books, manage favourites, use a shopping cart, place orders, and receive real-time notifications. Admins can fully manage book inventory with role-based access and secure JWT authentication.
+BookHive is a full-stack MERN (MongoDB, Express, React, Node.js) application designed to deliver a smooth and modern online bookstore experience. Users can explore books, manage favourites, add items to a cart, place orders, and receive real-time notifications. Admins can manage the entire book inventory with role-based access and secure JWT authentication.
 
-📌 Key Features
-👤 User Authentication & Roles
+This project was built alongside my ITP module for learning and practical understanding of real-world application development.
 
-Secure login & signup with JWT
+---
 
-Role-based access (User & Admin)
+## 📌 Key Features
 
-Profile page with address management
+### 👤 User Authentication & Roles
+- Secure user registration and login using JWT
+- Role-based access control (Admin / User)
+- User profile management with address updates
 
-📚 Book Management
+### 📚 Book Management (Admin)
+- Add, update, and delete books
+- Upload book cover images (Multer + Cloudinary)
+- Manage categories, languages, prices, and stock status
 
-Admin can add, update, and delete books
+### ❤️ Favourites System
+- Add and remove favourite books
+- Persistent, user-specific favourites
+- Instant UI updates with Notistack notifications
 
-Upload cover images using Multer
+### 🛒 Cart & Orders
+- Add/remove books from cart
+- Auto-calculated order totals
+- Place orders securely
+- View order history per user
 
-Categories, languages, pricing, and stock status
+### 🔔 Real-time Notifications
+- Toast notifications for actions and errors
+- Success, warning, and error alerts using Notistack
 
-❤️ Favourites System
+### 🎨 Modern UI/UX
+- Built with React + Tailwind CSS
+- Fully responsive design
+- Smooth page transitions using ScrollToTop
 
-Add/remove favourite books
+### 🔐 Secure & Scalable Backend
+- RESTful API with Node.js & Express
+- JWT-based authentication
+- MongoDB with Mongoose ORM
 
-Persistent user-specific favourites
+---
 
-Instant UI updates with Notistack notifications
+## 🛠 Tech Stack
 
-🛒 Cart & Orders
+| Layer | Technology |
+|------|-----------|
+| Frontend | React, Tailwind CSS, Notistack |
+| Backend | Node.js, Express.js |
+| Database | MongoDB + Mongoose |
+| Authentication | JWT |
+| Image Uploads | Multer, Cloudinary |
+| State Management | Redux Toolkit |
+| Routing | React Router v6 |
 
-Add/remove books from cart
+---
 
-Auto-calculated totals
+## 🚀 Getting Started
 
-Place orders instantly
-
-Order history for each user
-
-🔔 Real-time Notifications
-
-Smooth toast alerts using Notistack
-
-Success, error, and warning prompts throughout the system
-
-🎨 Modern UI/UX
-
-Built with React + Tailwind CSS
-
-Fully responsive interface
-
-Smooth page transitions with ScrollToTop
-
-🔐 Secure & Scalable Backend
-
-Node.js + Express REST API
-
-JWT-based authentication
-
-MongoDB with Mongoose ORM
-
-🛠 Tech Stack
-Layer	          Technology
-Frontend	      React, Tailwind CSS, Notistack
-Backend	        Node.js, Express.js
-Database	      MongoDB + Mongoose
-Authentication	JWT Tokens
-Image Uploads	  Multer, Cloudinary
-State Management	Redux Toolkit
-Routing	React Router v6
-🚀 Getting Started
-📌 Prerequisites
-
+### 📌 Prerequisites
 Ensure you have installed:
+- Node.js (v16 or later)
+- MongoDB
+- npm or yarn
 
-Node.js (v16+)
+---
 
-MongoDB
+## 🏗 Installation
 
-npm or yarn
-
-🏗 Installation
-1️⃣ Clone the Repository
+### 1️⃣ Clone the Repository
+```bash
 git clone https://github.com/yourusername/BookHive.git
 cd BookHive
 
-🔧 Backend Setup
+## 🔧 Backend Setup
+```bash
 cd backend
 npm install
 
-Create .env:
+## create .env file
 MONGO_URI=your_mongo_connection
 CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_SECRET_KEY=your_secret_key
 CLOUDINARY_API_KEY=your_api_key
-JWT_SECRET=your_secret_key
+CLOUDINARY_SECRET_KEY=your_secret_key
+JWT_SECRET=your_jwt_secret
 PORT=3000
 
-Run Backend
-npm start
+## API Endpoints
+| Method | Endpoint          | Description         |
+| ------ | ----------------- | ------------------- |
+| POST   | /api/user/sign-up | Register a new user |
+| POST   | /api/user/sign-in | Login user          |
 
-🎨 Frontend Setup
-cd frontend
-npm install
+| Method | Endpoint                 | Description          |
+| ------ | ------------------------ | -------------------- |
+| GET    | /api/book/get-all-books  | Fetch all books      |
+| GET    | /api/book/get-a-book/:id | Fetch single book    |
+| POST   | /api/book/add-book       | Add new book (Admin) |
+| PUT    | /api/book/update-book    | Update book (Admin)  |
+| DELETE | /api/book/delete-book    | Delete book (Admin)  |
 
-Run Frontend
-npm run dev
+| Method | Endpoint                                  | Description                 |
+| ------ | ----------------------------------------- | --------------------------- |
+| PUT    | /api/favourite/add-book-to-favourite      | Add book to favourites      |
+| PUT    | /api/favourite/remove-book-from-favourite | Remove book from favourites |
+| GET    | /api/favourite/get-favourite-books        | Get user favourites         |
+
+| Method | Endpoint                       | Description           |
+| ------ | ------------------------------ | --------------------- |
+| GET    | /api/cart/get-user-cart        | Get user cart         |
+| PUT    | /api/cart/add-to-cart          | Add book to cart      |
+| PUT    | /api/cart/remove-from-cart/:id | Remove book from cart |
 
 
-Your app will be available at:
-👉 http://localhost:5173
+| Method | Endpoint                       | Description           |
+| ------ | ------------------------------ | --------------------- |
+| GET    | /api/cart/get-user-cart        | Get user cart         |
+| PUT    | /api/cart/add-to-cart          | Add book to cart      |
+| PUT    | /api/cart/remove-from-cart/:id | Remove book from cart |
 
-🔥 API Endpoints (Sample)
-Method	  Endpoint	                   Description
-POST	   /api/user/sign-up	         Register new user
-POST	   /api/user/sign-in	         Login user
-GET	   /api/book/get-all-books	     Fetch all books
-POST	  /api/book/add-book	        Add new book (Admin)
-PUT	  /api/cart/add-to-cart	        Add book to cart
-PUT	 /api/favourite/add-book-to-favourite	Add to favourites
-POST	/api/order/place-order	       Place order
 
-(Full API documentation coming soon)
