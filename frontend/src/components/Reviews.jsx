@@ -2,56 +2,60 @@
 import React from "react";
 import { motion } from "framer-motion";
 
+// IMPORT LOCAL IMAGES
+import review1 from "../assets/reviews/review1.png";
+import review2 from "../assets/reviews/review2.jpg";
+import review3 from "../assets/reviews/review3.jpg";
+import review4 from "../assets/reviews/review4.webp";
+
 const defaultReviews = [
   {
     id: 1,
     name: "Aarav Sen",
-    title: "Great curation & fast delivery",
+    title: "The 5 AM Club",
     text:
-      "Found two tech titles I’d been hunting for. Smooth checkout and the packaging was solid. Will buy again!",
+      "This book completely changed my daily routine. A powerful read on discipline, productivity, and mindset.",
     rating: 5,
-    img: "https://covers.openlibrary.org/b/isbn/9780451524935-L.jpg",
+    img: review1,
   },
   {
     id: 2,
     name: "Nethmi Perera",
-    title: "Love the recommendations",
+    title: "Famous Five",
     text:
-      "The ‘You might also like’ picks were spot on. Discovered a brilliant fiction series.",
-    rating: 4,
-    img: "https://covers.openlibrary.org/b/isbn/9780141439518-L.jpg",
+      "A nostalgic and fun adventure series. Perfect for young readers and anyone who loves classic storytelling.",
+    rating: 5,
+    img: review2,
   },
   {
     id: 3,
     name: "Ishan Fernando",
-    title: "Clean UI, easy browsing",
+    title: "Artificial Intelligence",
     text:
-      "Filters for genres and price made it super easy. Wishlisted a bunch for later!",
+      "An insightful introduction to AI concepts. Helped me understand machine learning and real-world applications.",
     rating: 5,
-    img: "https://covers.openlibrary.org/b/isbn/9780062316110-L.jpg",
+    img: review3,
   },
   {
     id: 4,
     name: "Suhani Jayasuriya",
-    title: "Exactly what I needed",
+    title: "Python Programming",
     text:
-      "Got a rare print for my uni project. The copy arrived in perfect condition.",
-    rating: 5,
-    img: "https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg",
+      "Beginner-friendly and well structured. Great explanations with practical examples for learning Python.",
+    rating: 4,
+    img: review4,
   },
 ];
 
 function Stars({ rating = 5 }) {
-  const total = 5;
   return (
     <div className="flex items-center" aria-label={`Rating: ${rating} of 5`}>
-      {Array.from({ length: total }).map((_, i) => (
+      {Array.from({ length: 5 }).map((_, i) => (
         <svg
           key={i}
           viewBox="0 0 20 20"
-          className={`h-5 w-5 ${
-            i < rating ? "fill-[#E85A4F]" : "fill-[#8B5E3C]/40"
-          }`}
+          className={`h-5 w-5 ${i < rating ? "fill-[#E85A4F]" : "fill-[#8B5E3C]/40"
+            }`}
         >
           <path d="M10 15.27 15.18 18l-1.64-5.03L18 9.24l-5.19-.04L10 4 7.19 9.2 2 9.24l4.46 3.73L4.82 18 10 15.27z" />
         </svg>
@@ -82,8 +86,8 @@ export default function Reviews({ reviews = defaultReviews }) {
   return (
     <section className="w-full py-14 md:py-20 bg-[#3B2F2F]">
       <div className="mx-auto max-w-7xl px-6">
-        
-        {/* Section Title */}
+
+        {/* SECTION HEADER */}
         <div className="mb-10 text-center">
           <motion.h2
             className="text-3xl md:text-4xl font-semibold text-[#D7C4A9]"
@@ -106,7 +110,7 @@ export default function Reviews({ reviews = defaultReviews }) {
           </motion.p>
         </div>
 
-        {/* Review Cards */}
+        {/* REVIEW CARDS */}
         <motion.div
           className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
           variants={container}
@@ -127,6 +131,7 @@ export default function Reviews({ reviews = defaultReviews }) {
                 shadow-xl shadow-black/30
               "
             >
+              {/* IMAGE */}
               <div className="aspect-[16/10] overflow-hidden">
                 <motion.img
                   src={r.img}
@@ -137,6 +142,7 @@ export default function Reviews({ reviews = defaultReviews }) {
                 />
               </div>
 
+              {/* CONTENT */}
               <div className="p-5">
                 <Stars rating={r.rating} />
 
@@ -153,19 +159,15 @@ export default function Reviews({ reviews = defaultReviews }) {
                     {r.name}
                   </span>
 
-                  <motion.span
+                  <span
                     className="
-                      rounded-full border border-[#D7C4A9]/40 
-                      px-2 py-0.5 text-[11px] 
+                      rounded-full border border-[#D7C4A9]/40
+                      px-2 py-0.5 text-[11px]
                       text-[#F2E8D5]/80
                     "
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 0.25, duration: 0.4 }}
-                    viewport={{ once: true }}
                   >
                     Verified Reader
-                  </motion.span>
+                  </span>
                 </div>
               </div>
             </motion.article>
